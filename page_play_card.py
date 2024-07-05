@@ -65,7 +65,7 @@ class MatchingGame:
         self.cards = []
         self.selected_cards = []
         # จับเวลาเมื่อเริ่มเกม
-        self.initial_display_time = 5000  # 2 วินาที -------------------------------------------
+        self.initial_display_time = 5000  # 2 วินาที (แก้เป็น5 วิเพื่อเทส)
         self.start_time = pygame.time.get_ticks()
         self.initial_display = True
         # จับเวลาเมื่อ card match
@@ -99,17 +99,6 @@ class MatchingGame:
             # ถ้ามีการ์ดที่ถูกเลือก 2 ใบแล้ว และไม่มีการ์ดที่ match กันอยู่ เริ่มจับเวลา
             if len(self.selected_cards) == 2 and not self.matched_cards:
                 self.flip_time = pygame.time.get_ticks()
-
-    def update_matched_card(self):
-        current_time = pygame.time.get_ticks()
-        # จัดการกับการ์ดที่ match กัน
-        if self.matched_cards:
-            if current_time - self.match_time[0] > self.match_display_time:
-                for card in self.matched_cards[:2]:
-                    card.is_matched = True
-                self.match_time = self.match_time[1:]
-                self.matched_cards = self.matched_cards[2:]
-                self.selected_cards = [card for card in self.selected_cards if not card.is_matched]
 
     def update(self):
         current_time = pygame.time.get_ticks()
