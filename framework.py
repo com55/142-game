@@ -77,6 +77,111 @@ class Screen():
         self.SCREEN_HEIGHT = screen_info.current_h
 
 
+class TimeGame:
+    def __init__(self):
+        self.__time_start = self.get_current_time()
+        self.__old_time = 0
+        self.__now_time = 0
+        # การนับเวลา
+        self.__minutes = 0
+        self.__seconds = 0
+        # ถ้าต้องการให้หยุดจับเวลาให้ใส่เป็น True
+        self.is_stop = False
+        # การตรวจสอบเวลาเมื่อหยุดนับเวลา
+        self.__old_stop = 0
+        self.__now_stop = 0
+        self.__timeStop_milli = 0
+        #  1 วินาที = 1000 มิลลิวินาที
+        self.__ONE_SECOND = 1000
+
+    @property # แปลงเมธอดให้เป็นแอตทริบิวต์
+    def minutes(self) -> int:
+        # ป้องกันการถูกแทนค่าจากภายนอก
+        # แต่ให้สามารถส่งออกข้อมูลไปนอก class ได้
+        return self.__minutes
+
+    @property # แปลงเมธอดให้เป็นแอตทริบิวต์
+    def seconds(self) -> int:
+        # ป้องกันการถูกแทนค่าจากภายนอก
+        # แต่ให้สามารถส่งออกข้อมูลไปนอก class ได้
+        return self.__seconds
+
+    def reset_time(self):
+        # เปลี่ยนทุกค่าเป็นค่าเริ่มต้น
+        self.__time_start = self.get_current_time()
+        self.__old_time = 0
+        self.__now_time = 0
+        self.__minutes = 0
+        self.__seconds = 0
+        self.is_stop = False
+        self.__old_stop = 0
+        self.__now_stop = 0
+        self.__timeStop_milli = 0
+
+    def update_time(self):
+        if self.__timestop():
+            return
+        
+        sum_second = int((self.get_current_time() - self.__time_start) / self.__ONE_SECOND)
+        self.__now_time = sum_second
+
+        if self.__old_time != self.__now_time:
+            self.__seconds += 1
+            if self.__seconds >= 60:
+                self.__minutes += 1
+                self.__seconds = 0
+            self.__old_time = self.__now_time
+
+    def check_elapsed_time(self, time_check: int, is_Second = True) -> bool:
+        # ตรวจสอบว่าเวลาผ่านไปเท่ากับจำนวน วินาที หรือ มิลลิวินาที ที่ระบุหรือไม่
+
+        if time_check < 0:
+            # เวลาสำหรับตรวจสอบไม่ควรน้อยกว่า 0
+            raise ValueError("Time check value must be non-negative")
+        
+        if self.__timestop():
+            # หากเวลาหยุดอยู่ไม่ควรทำงาน
+            return
+        
+        if is_Second:
+            diff = int((self.get_current_time() - self.__time_start) / self.__ONE_SECOND)
+            stop = self.__timeStop_milli / self.__ONE_SECOND
+        else:
+            diff = int(self.get_current_time() - self.__time_start)
+            stop = self.__timeStop_milli
+
+        if (diff - stop) >= time_check:
+            return True
+        else:
+            return False
+
+    def get_elapsed_time(self, is_Second = True) -> int:
+        # ส่งค่าเวลาตั้งแต่เริ่มสร้าง object จนถึงปัจจุบัน
+        if self.__timestop():
+            return
+        if is_Second:
+            diff = int((self.get_current_time() - self.__time_start) / self.__ONE_SECOND)
+            self.__now_time = diff
+            return self.__now_time - self.__old_time
+        else:
+            diff = int((self.get_current_time() - self.__time_start))
+            return diff - (self.__old_time * self.__ONE_SECOND)
+        
+    def get_current_time(self):
+        # ใช้ดึงเวลาในปัจจุบัน
+        return pygame.time.get_ticks()
+
+    def __timestop(self):
+        if not self.is_stop:
+            return self.is_stop
+        self.__now_stop = int((self.get_current_time() - self.__time_start) / self.__ONE_SECOND)
+        if self.__old_stop != self.__now_stop:
+            self.__timeStop_milli += self.__ONE_SECOND
+            self.__old_stop = self.__now_stop
+
+        return self.is_stop
+
+
 class FontSystem():
     def __init__(self,
                  font_path: str,
@@ -177,7 +282,7 @@ class Button(FontSystem):
                    x=1, y=1):
         self.button = pygame.Rect(x, y, width_button, height_button)
     
-    def click(self, event):
+    def click(self, event: pygame.event.Event):
         if event.type == pygame.MOUSEMOTION:
             if self.button.collidepoint(event.pos):
                 self.state = "hover"
@@ -367,7 +472,7 @@ class Dropdown(FontSystem):
                 text_rect = text_surface.get_rect(center=(rect.x+(width/2), rect.y+(height/2)))
                 screen_draw.blit(text_surface, text_rect)
 
-    def handle_event(self, event) -> bool:
+    def handle_event(self, event: pygame.event.Event) -> bool:
         if event.type == pygame.MOUSEMOTION and self.__active:
             for i, option in enumerate(self.__options):
                 rect = pygame.Rect(self.rect.x, self.rect.y + (i+1) * self.rect.height, self.rect.width, self.rect.height)
@@ -501,7 +606,7 @@ class ScrollableMenu:
             line_surface.set_alpha(alpha)
             screen_draw.blit(line_surface, (x, y + i))
 
-    def handle_event(self, event):
+    def handle_event(self, event: pygame.event.Event):
         if self.rect is None:
             return None
 

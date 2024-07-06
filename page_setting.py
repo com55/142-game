@@ -6,7 +6,7 @@ from variable import Variable
 def main(page_setting_run: bool, 
          pygame: pygame, 
          var: Variable, 
-         screen: object) -> bool:
+         screen: fw.Screen) -> bool:
     
     # ตัวแปร text ในหน้า setting
     text_screen_size = fw.Text('screen size : ', 30, var.colors.BLACK)

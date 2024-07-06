@@ -50,7 +50,7 @@ while True:
     screen.window.fill(var.colors.WHITE)
     var.show_gem(screen, 420)
     var.text_name_game.show(screen.window, screen.pack_x(10), screen.pack_y(10))
-    var.text_version.show(screen.window, screen.pack_x(15), screen.pack_y(40), 'v.0.0.71')
+    var.text_version.show(screen.window, screen.pack_x(15), screen.pack_y(40), 'v.0.1.5')
     var.btnGacha.show(screen.window, screen.width(50), screen.height(50), screen.pack_x(580), screen.pack_y(240))
     var.btnPlay.show(screen.window, screen.width(50), screen.height(50), screen.pack_x(580), screen.pack_y(300))
     var.btnSetting.show(screen.window, screen.width(50), screen.height(50), screen.pack_x(520), screen.pack_y(10))
