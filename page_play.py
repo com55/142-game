@@ -3,6 +3,7 @@ import pygame
 import framework as fw
 from variable import Variable
 import page_play_card
+import page_play_vsMons
 
 def main(page_play_run: bool, 
          pygame: pygame, 
@@ -22,7 +23,7 @@ def main(page_play_run: bool,
         elif var.btnPlayAns.click(event):
             pass
         elif var.btnPlayVsMons.click(event):
-            pass
+            page_play_vsMons.main(pygame, var, screen)
         elif var.btnBack.click(event):
             page_play_run = False
 
@@ -33,5 +34,5 @@ def main(page_play_run: bool,
     var.btnBack.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(10), screen.pack_y(10))
 
     pygame.display.flip()
-    var.clock.tick(30)
+    var.clock.tick(var.FPS)
     return page_play_run

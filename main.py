@@ -19,9 +19,24 @@ pygame.display.set_icon(pygame.image.load(get_image.icon))
 # global variable
 screen = fw.Screen(640, 360)
 var = variable.Variable(pygame)
+running = True
 
+# # ตรวจสอบว่ารันอยู่บนไฟล์ EXE หรือไม่
+# if getattr(sys, '_MEIPASS', None):
+#     import datetime
+#     # ตรวจสอบวันที่ปัจจุบัน
+#     today = datetime.date.today()
+#     expiry_date = datetime.date(2024, 7, 8)  # วันที่หมดอายุ (8 กรกฎาคม 2567)
 
-while True:
+#     if today >= expiry_date:
+#         # ทำให้เกมเปิดไม่ได้
+#         running = False
+#     else:
+#         print("ไฟล์ EXE ยังไม่หมดอายุ")
+# else:
+#     print("ไม่ได้รันอยู่บนไฟล์ EXE")
+
+while running:
     # ตัวแปรสำหรับเข้าแต่ละหน้า
     page_play_run = False
     page_gacha_run = False
@@ -50,13 +65,13 @@ while True:
     screen.window.fill(var.colors.WHITE)
     var.show_gem(screen, 420)
     var.text_name_game.show(screen.window, screen.pack_x(10), screen.pack_y(10))
-    var.text_version.show(screen.window, screen.pack_x(15), screen.pack_y(40), 'v.0.1.5')
+    var.text_version.show(screen.window, screen.pack_x(15), screen.pack_y(40), 'v.0.1.13')
     var.btnGacha.show(screen.window, screen.width(50), screen.height(50), screen.pack_x(580), screen.pack_y(240))
     var.btnPlay.show(screen.window, screen.width(50), screen.height(50), screen.pack_x(580), screen.pack_y(300))
     var.btnSetting.show(screen.window, screen.width(50), screen.height(50), screen.pack_x(520), screen.pack_y(10))
     var.btnExit.show(screen.window, screen.width(50), screen.height(50), screen.pack_x(580), screen.pack_y(10))
     pygame.display.flip()
-    var.clock.tick(30)
+    var.clock.tick(var.FPS)
 
     while page_play_run:
         page_play_run = page_play.main(page_play_run, pygame, var, screen)

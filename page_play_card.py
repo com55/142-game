@@ -221,4 +221,4 @@ def main(pygame: pygame,
             running = False
 
         pygame.display.flip()
-        var.clock.tick(30)
+        var.clock.tick(var.FPS)

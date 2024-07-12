@@ -76,5 +76,5 @@ def main(page_setting_run: bool,
     var.btnBack.show(screen.window, screen.width(20), screen.height(20), screen.pack_x(10), screen.pack_y(10))
 
     pygame.display.flip()
-    var.clock.tick(30)
+    var.clock.tick(var.FPS)
     return page_setting_run
